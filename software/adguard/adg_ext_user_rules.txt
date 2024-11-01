@@ -1,0 +1,28 @@
+developer.mozilla.org##div.document-page > div.container
+developer.mozilla.org##div.page-wrapper > div.top-banner
+developer.mozilla.org##div#root > footer
+developer.mozilla.org##main#content > aside.article-footer
+godbolt.org###ces
+godbolt.org###motd
+hanime1.me###content-div > div.row.no-gutter.video-show-width:first-child > div.col-md-3.single-show-list:last-child > div.hidden-xs.hidden-sm:first-child
+hanime1.me###myHeader
+ip.sb##div[class^="wwads_abp"]
+mail.163.com###dvContainer div[id$="dvWelBottom"]
+nodejs.cn##div[id^="pagead"]
+npmmirror.com##a:has(> img[alt$="ad"])
+npmmirror.com##div.ant-alert
+onedrive.live.com##button[class^="getMoreStorageButton"]
+onedrive.live.com##div:has(> div[class^="msTilesCarousel"])
+onedrive.live.com##div.od-QuotaBannerWrapper
+onedrive.live.com##div[class^="storageUpsellBanner"]
+pan.baidu.com##.app-user-vip-center
+pan.baidu.com##.gOIbzPb
+pan.baidu.com##.newIcon
+pan.baidu.com##.wp-s-aside-nav__main-bottom > a:not(:last-child)
+pan.baidu.com##.wp-side-options-btn
+pan.baidu.com##.yike-entrance
+pan.baidu.com##div.nd-game-entry
+pan.baidu.com##div.nd-vip-btn
+pan.baidu.com##span.nd-sug-ad-item
+pan.baidu.com##span.nd-team-space
+regex101.com##.yOGxa, .DpjAw

@@ -31,7 +31,7 @@ proxies:
       server: <<SERVER_DOMAIN>>
       port: <<TROJAN_LISTEN_PORT>>
       password: <<TROJAN_AUTH_PASSWORD>>
-      sni: <<MASQUERADE_HREF>>
+      sni: <<SERVER_DOMAIN>>
       skip-cert-verify: false
     - name: "<<HYSTERIA_NAME>>"
       type: hysteria2
@@ -43,7 +43,7 @@ proxies:
       password: <<HYSTERIA_AUTH_PASSWORD>>
       obfs: salamander
       obfs-password: <<HYSTERIA_OBFS_PASSWORD>>
-      sni: <<MASQUERADE_HREF>>
+      sni: <<SERVER_DOMAIN>>
       skip-cert-verify: false
 proxy-groups:
     - name: "\U0001F680 节点选择"

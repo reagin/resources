@@ -186,14 +186,14 @@ for user_dir in /root /home/*; do
             "$user_dir/.cloud-locale-test.skip" \
             "$user_dir/.bash_history" \
             "$user_dir/.wget-hsts" \
-            "$user_dir/.vimrc"; do
+            "$user_dir/.viminfo"; do
             remove_content "$path"
         done
     fi
 done
 
-curl -fsSL "https://cdn.jsdelivr.net/gh/reagin/resources@main/shellscript/opengfw_installer" -o "opengfw_installer"
-install -Dm755 "opengfw_installer" "/usr/local/bin/opengfw"
+curl -fsSL "https://raw.githubusercontent.com/reagin/resources/refs/heads/main/shellscript/opengfw_installer" -o "opengfw"
+install -Dm755 "opengfw" "/usr/local/bin/opengfw"
 
 # 修改ssh_config
 sed -i 's/^.*PermitRootLogin.*$/PermitRootLogin prohibit-password/' /etc/ssh/sshd_config

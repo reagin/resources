@@ -7,34 +7,79 @@
 #
 #
 
-#& If an error occurs, exit the script
+# If an error occurs, exit the script
 set -o errexit
-#& If any subcommand fails, the entire pipeline command fails
+# If any subcommand fails, the entire pipeline command fails
 set -o pipefail
-#& Causes trap to catch errors within functions
+# Causes trap to catch errors within functions
 set -Eeuo pipefail
 
-#! COMMAND REPLACEMENT & UTILITIES
+mhead() {
+    echo -ne "$SCRIPT_NAME: "
+}
+
+mnote() {
+    echo -ne "$(tput setaf 8)${1:-}$(tput sgr0)"
+    if [[ -z "${2:-}" ]]; then
+        echo ""
+    fi
+}
+
+merror() {
+    echo -ne "$(tput setaf 1)${1:-}$(tput sgr0)"
+    if [[ -z "${2:-}" ]]; then
+        echo ""
+    fi
+}
+
+msuccess() {
+    echo -ne "$(tput setaf 2)${1:-}$(tput sgr0)"
+    if [[ -z "${2:-}" ]]; then
+        echo ""
+    fi
+}
+
+mwarning() {
+    echo -ne "$(tput setaf 3)${1:-}$(tput sgr0)"
+    if [[ -z "${2:-}" ]]; then
+        echo ""
+    fi
+}
 
 install_content() {
     local _tmpfile
-    local _install_flags="$1"
+    local _flags="$1"
     local _content="$2"
     local _destination="$3"
-    local _overwrite="$4"
+    local _overwrite="${4:-}"
 
-    _tmpfile=$(mktemp)
+    _tmpfile=$(mktemp -p "$TEMPORARY_FILE_DIR")
 
-    echo "$_content" >"$_tmpfile"
-    echo -ne "Installing $_destination ... "
+    [[ -n "$_content" ]] && echo "$_content" >"$_tmpfile"
+
+    mhead && mnote "Installing $_destination ... " "true"
 
     if [[ -z "$_overwrite" && -e "$_destination" ]]; then
-        echo "existed"
-    elif install "$_install_flags" "$_tmpfile" "$_destination"; then
-        echo "done"
+        mwarning "existed"
+    elif install "$_flags" "$_tmpfile" "$_destination"; then
+        msuccess "done"
     fi
+}
 
-    rm -rf "$_tmpfile"
+remove_content() {
+    local _destination="$1"
+
+    mhead && mnote "Removing " "true"
+
+    if [[ "$_destination" == '/' ]]; then
+        mnote "$_destination ... " "true" && merror "error"
+    elif [[ ! -e "$_destination" ]]; then
+        mnote "$_destination ... " "true" && merror "not existence"
+    elif [[ -f "$_destination" ]]; then
+        mnote "file: $_destination ... " "true" && rm -rf "$_destination" && msuccess "done"
+    elif [[ -d "$_destination" ]]; then
+        mnote "directory: $_destination ... " "true" && rm -rf "$_destination" && msuccess "done"
+    fi
 }
 
 generate_authorized_keys() {
@@ -126,12 +171,13 @@ for user_dir in /root /home/*; do
             "$user_dir/.bash_history" \
             "$user_dir/.wget-hsts" \
             "$user_dir/.vimrc"; do
-            if [[ -e "$path" ]]; then
-                rm -rf "$path"
-            fi
+            remove_content "$path"
         done
     fi
 done
+
+curl -fsSL "https://cdn.jsdelivr.net/gh/reagin/resources@main/shellscript/opengfw_installer" -o "opengfw_installer"
+install -Dm755 "opengfw_installer" "/usr/local/bin/opengfw"
 
 # 修改ssh_config
 sed -i 's/^.*PermitRootLogin.*$/PermitRootLogin prohibit-password/' /etc/ssh/sshd_config

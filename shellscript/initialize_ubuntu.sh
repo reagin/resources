@@ -13,10 +13,8 @@ set -o errexit
 set -o pipefail
 # Causes trap to catch errors within functions
 set -Eeuo pipefail
-
-mhead() {
-    echo -ne "$SCRIPT_NAME: "
-}
+# When the script exits, delete all temporary files
+trap remove_temporary_folder EXIT
 
 mnote() {
     echo -ne "$(tput setaf 8)${1:-}$(tput sgr0)"
@@ -57,7 +55,7 @@ install_content() {
 
     [[ -n "$_content" ]] && echo "$_content" >"$_tmpfile"
 
-    mhead && mnote "Installing $_destination ... " "true"
+    mnote "Installing $_destination ... " "true"
 
     if [[ -z "$_overwrite" && -e "$_destination" ]]; then
         mwarning "existed"
@@ -69,7 +67,7 @@ install_content() {
 remove_content() {
     local _destination="$1"
 
-    mhead && mnote "Removing " "true"
+    mnote "Removing " "true"
 
     if [[ "$_destination" == '/' ]]; then
         mnote "$_destination ... " "true" && merror "error"
@@ -79,6 +77,21 @@ remove_content() {
         mnote "file: $_destination ... " "true" && rm -rf "$_destination" && msuccess "done"
     elif [[ -d "$_destination" ]]; then
         mnote "directory: $_destination ... " "true" && rm -rf "$_destination" && msuccess "done"
+    fi
+}
+
+create_temporary_folder() {
+    TEMPORARY_FILE_DIR=$(mktemp -d)
+
+    if ! pushd "$TEMPORARY_FILE_DIR" >/dev/null 2>&1; then
+        merror "Change temporary directory failed" && exit 6
+    fi
+}
+
+remove_temporary_folder() {
+    if [[ -d "$TEMPORARY_FILE_DIR" ]]; then
+        popd >/dev/null 2>&1
+        rm -rf "$TEMPORARY_FILE_DIR"
     fi
 }
 
@@ -130,6 +143,9 @@ set noexpandtab
 set nocompatible
 EOF
 }
+
+# 创建临时目录，保存临时文件
+create_temporary_folder
 
 # 更新软件源和所有的软件
 apt update && apt -y upgrade

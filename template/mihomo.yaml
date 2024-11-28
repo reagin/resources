@@ -38,7 +38,7 @@ proxies:
       server: <<SERVER_DOMAIN>>
       port: <<HYSTERIA_LISTEN_PORT>>
       ports: <<HYSTERIA_LISTEN_PORT>>/<<HYSTERIA_HOPPING_RANGE>>
-      up: "200 Mbps"
+      up: "100 Mbps"
       down: "200 Mbps"
       password: <<HYSTERIA_AUTH_PASSWORD>>
       obfs: salamander

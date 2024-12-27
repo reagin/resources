@@ -1306,7 +1306,7 @@ parse_arguments() {
     done
 
     # Default option
-    OPERATION=${OPERATION:-"install_all"}
+    OPERATION=${OPERATION:-"help"}
     # Global configuration certificate path
     PRIVATE_KEY_PATH="$ACME_CERT_DIR/$SERVER_DOMAIN/private.key"
     PUBLIC_PEM_PATH="$ACME_CERT_DIR/$SERVER_DOMAIN/public.pem"

@@ -1,18 +1,20 @@
-mixed-port: 7890
+mixed-port: 7893
 allow-lan: true
 bind-address: "*"
 mode: rule
 log-level: info
-external-controller: 127.0.0.1:9090
+external-controller: 0.0.0.0:9090
 dns:
     enable: true
     ipv6: false
     default-nameserver:
         - 223.5.5.5
         - 119.29.29.29
-    fake-ip-range: 198.18.0.1/16
+        - 114.114.114.114
     use-hosts: true
     nameserver:
+        - 119.29.29.29
+        - 114.114.114.114
         - https://doh.pub/dns-query
         - https://dns.alidns.com/dns-query
     fallback:
@@ -38,29 +40,29 @@ proxies:
       server: <<SERVER_DOMAIN>>
       port: <<HYSTERIA_LISTEN_PORT>>
       ports: <<HYSTERIA_LISTEN_PORT>>/<<HYSTERIA_HOPPING_RANGE>>
-      up: "100 Mbps"
-      down: "200 Mbps"
+      up: "200 Mbps"
+      down: "400 Mbps"
       password: <<HYSTERIA_AUTH_PASSWORD>>
       obfs: salamander
       obfs-password: <<HYSTERIA_OBFS_PASSWORD>>
       sni: <<SERVER_DOMAIN>>
       skip-cert-verify: false
 proxy-groups:
-    - name: "\U0001F680 节点选择"
+    - name: "🚀 节点选择"
       type: select
       proxies:
           - "<<TROJAN_NAME>>"
           - "<<HYSTERIA_NAME>>"
-    - name: "\U0001F3AF 全球直连"
+    - name: "🎯 全球直连"
       type: select
       proxies:
           - DIRECT
-          - "\U0001F680 节点选择"
-    - name: "\U0001F41F 漏网之鱼"
+          - "🚀 节点选择"
+    - name: "🐟 漏网之鱼"
       type: select
       proxies:
-          - "\U0001F680 节点选择"
           - DIRECT
+          - "🚀 节点选择"
 rules:
     - DOMAIN-SUFFIX,tracker.opentrackr.org,REJECT
     - DOMAIN-SUFFIX,tracker1.520.jp,REJECT

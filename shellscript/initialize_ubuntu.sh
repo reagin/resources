@@ -16,6 +16,9 @@ set -Eeuo pipefail
 # When the script exits, delete all temporary files
 trap remove_temporary_folder EXIT
 
+# Temporary file directory
+TEMPORARY_FILE_DIR=
+
 mnote() {
     echo -ne "$(tput setaf 8)${1:-}$(tput sgr0)"
     if [[ -z "${2:-}" ]]; then
@@ -171,7 +174,7 @@ for user_dir in /root /home/*; do
         sed -i 's/^.*force_color_prompt=yes$/force_color_prompt=yes/' "$user_dir/.bashrc"
         sed -i '/# some more ls aliases/{n;N;N;d;}' "$user_dir/.bashrc"
         sed -i '/# some more ls aliases/a alias l='\''ls -CF'\''' "$user_dir/.bashrc"
-        sed -i '/# some more ls aliases/a alias la='\''ls -A'\''' "$user_dir/.bashrc"
+        sed -i '/# some more ls aliases/a alias la='\''ls -AF'\''' "$user_dir/.bashrc"
         sed -i '/# some more ls aliases/a alias ll='\''ls -AlF'\''' "$user_dir/.bashrc"
 
         sed -i "/^if \[ \"\$color_prompt\" = yes \]; then/{n;d}" "$user_dir/.bashrc"
@@ -191,9 +194,6 @@ for user_dir in /root /home/*; do
         done
     fi
 done
-
-curl -fsSL "https://raw.githubusercontent.com/reagin/resources/refs/heads/main/shellscript/opengfw_installer" -o "opengfw"
-install -Dm755 "opengfw" "/usr/local/bin/opengfw"
 
 # 修改ssh_config
 sed -i 's/^.*PermitRootLogin.*$/PermitRootLogin prohibit-password/' /etc/ssh/sshd_config
